@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:Helpers="clr-namespace:Bolao.Pinheiros.Helpers"
+             mc:Ignorable="d"
+             x:Class="Bolao.Pinheiros.MainPage">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Helpers:InverseBoolConverter x:Key="inverseBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
+    <ContentPage.Content>
+        <ListView x:Name="competitionsListView" HasUnevenRows="True" IsGroupingEnabled="True" ItemsSource="{Binding AgruppedData}"  GroupDisplayBinding="{Binding Key}" >
+            <ListView.GroupHeaderTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout BackgroundColor="AliceBlue" Padding="5">
+                            <Grid VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                                <Label Text="{Binding Key}" TextColor="Black" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
+                            </Grid>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.GroupHeaderTemplate>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Orientation="Horizontal" VerticalOptions="FillAndExpand" HorizontalOptions="CenterAndExpand" Margin="20">
+                            <Image Source="{ Binding id, 
+                                StringFormat='https://imagecache.365scores.com/image/upload/f_auto,w_72,h_72,c_limit,q_auto:eco,d_Countries:Round:21.png/Competitions/Light/{0}'}"
+                                    Aspect="AspectFit" VerticalOptions="Center" HorizontalOptions="Center"/>
+                            <Label Text="{Binding name}" VerticalOptions="Center" HorizontalOptions="Center" />
+                            <Label Text="{Binding totalGames, StringFormat='- ({0} jogo)'}" VerticalOptions="Center" HorizontalOptions="Center" IsVisible="False">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label" Binding="{Binding totalGames}" Value="1">
+                                        <Setter Property="IsVisible" Value="True" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                            <Label Text="{Binding totalGames, StringFormat='- ({0} jogos)'}" VerticalOptions="Center" HorizontalOptions="Center">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label" Binding="{Binding totalGames}" Value="1">
+                                        <Setter Property="IsVisible" Value="False" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                        </StackLayout>      
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </ContentPage.Content>
+
+</ContentPage>

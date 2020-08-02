@@ -1,0 +1,70 @@
+﻿@using Bolao.Pinheiros.BusinessLogic.Models
+@model Root
+
+<div class="container-estatisticas">
+    @(Html.Partial("_Events", Model.mainGame))
+    <div class="estatisticas">
+        <div class="dados-confronto">
+            @if (Model.GetGamesBetweenTeams().Count > 0)
+            {
+                <div class="scene">
+                    <div class="flip-card-icon"></div>
+                    <div class="card">
+                        <div class="card__face card__face--front">
+                            <div class="negrito">Confronto</div>
+                            <br>
+                            @foreach (var game in Model.GetGamesBetweenTeams().OrderByDescending(x => x.startTime))
+                            {
+                                @(Html.Partial("_GameResume", game))
+                            }
+                        </div>
+                        <div class="card__face card__face--back">
+                            @(Html.Partial("_GamesStats", Model))
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="previous-meetings-widget-header-component _n12lus">Não temos informações de jogos prévios entre estes times</div>
+            }
+        </div>
+        <div class="dados-casa">
+            <div class="scene">
+                <div class="flip-card-icon"></div>
+                <div class="card">
+                    <div class="card__face card__face--front">
+                        <div class="negrito">@(Model.mainGame.homeCompetitor.name)</div>
+                        <br>
+                        @foreach (var game in Model.GetHomeGames().OrderByDescending(x => x.startTime))
+                        {
+                            @(Html.Partial("_GameResume", game))
+                        }
+                    </div>
+                    <div class="card__face card__face--back">
+                        @(Html.Partial("_GamesStatsHome", Model))
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="dados-visitante">
+            <div class="scene">
+                <div class="flip-card-icon"></div>
+                <div class="card">
+                    <div class="card__face card__face--front">
+                        <div class="negrito">@(Model.mainGame.awayCompetitor.name)</div>
+                        <br>
+                        @foreach (var game in Model.GetAwayGames().OrderByDescending(x => x.startTime))
+                        {
+                            @(Html.Partial("_GameResume", game))
+                        }
+                    </div>
+                    <div class="card__face card__face--back">
+                        @(Html.Partial("_GamesStatsAway", Model))
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @(Html.Partial("_Bets"))
+</div>

@@ -1,0 +1,23 @@
+﻿@model Bolao.Pinheiros.BusinessLogic.Models.Game
+@if (Model != null)
+{
+    var title = Model.ToStringScore();
+    <div class="previous-meetings-widget-row-component game-container" title="@(title)">
+        <div class="previous-meetings-widget-row-component subtitle">@(Model.competitionDisplayName)</div>
+        <div class="previous-meetings-widget-row-component game-data">
+            <div class="previous-meetings-widget-row-component">
+                <div class=" text-component">@(Model.homeCompetitor.name)</div>
+            </div>
+            <div class="previous-meetings-widget-row-component">
+                @if (Model.homeCompetitor.score >= 0)
+                {
+                    <text>@(Model.homeCompetitor.score) - @(Model.awayCompetitor.score)</text>
+                }
+            </div>
+            <div class="previous-meetings-widget-row-component">
+                <div class=" text-component">@(Model.awayCompetitor.name)</div>
+            </div>
+        </div>
+        <div class="previous-meetings-widget-row-component subtitle">@(Model.startTime.ToShortDateString())</div>
+    </div>
+}

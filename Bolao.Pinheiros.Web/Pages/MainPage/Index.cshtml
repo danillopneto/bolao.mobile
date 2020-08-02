@@ -1,0 +1,15 @@
+﻿@model Bolao.Pinheiros.BusinessLogic.Models.Root
+@{
+    ViewBag.Title = "Bolão";
+}
+
+<header>
+    <div class="games-filter">
+        <input type="text" id="datepicker" placeholder="Data desejada" />
+    </div>
+    <div class="competition-filter">
+        <input id="search-field" type="text" placeholder="Procurar time ou liga" value="">
+    </div>
+</header>
+@(Html.Partial("_Games"))
+<script src="./Scripts/bolao.js?@(DateTime.Now.TimeOfDay.Ticks)"></script>

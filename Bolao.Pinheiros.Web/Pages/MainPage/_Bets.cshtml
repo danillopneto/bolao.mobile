@@ -1,0 +1,119 @@
+﻿@using Bolao.Pinheiros.BusinessLogic.Models
+@model Root
+@{
+    const double PERCENT_MED = 60;
+    var percentBothTeamScored = Model.GetPercentBothScored();
+    var percentBothTeamDidntScore = Model.GetPercentBothDidntScore();
+    var averageGoalsFirst = Model.GetAverageGoalsFirstHalf();
+    var averageGoalsSecond = Model.GetAverageGoalsSecondHalf();
+    var cornersAverage = Model.GetCornersAverage();
+    var winners = Model.GetPossibleWinners();
+    var homeWinning = winners[Model.mainGame.homeCompetitor.id];
+    var drawWinning = winners[0];
+    var awayWinning = winners[Model.mainGame.awayCompetitor.id];
+    var resultFinded = homeWinning || drawWinning || awayWinning;
+}
+<div class="bets-info" data-ended="@(Model.mainGame.IsEnded())">
+    <div class="detalhar-apostas">Apostas</div>
+    <div class="goals-bets">
+        <div class="negrito">Moderado</div>
+        <br>
+        @{
+            var overGoals = Math.Round(Model.GetAverageGoals()) - 1.5;
+        }
+        @if (overGoals > 0)
+        {
+            <div class="goals-bet" data-bet-winner=@(Model.mainGame.GetSumScore() > overGoals)>
+                <label class="negrito">Jogo acima de</label>
+                <label class="team-value">@(overGoals) gols</label>
+            </div>
+        }
+        @if (percentBothTeamScored >= PERCENT_MED
+                || percentBothTeamDidntScore >= PERCENT_MED)
+        {
+            var bothWinnerMed = percentBothTeamScored > percentBothTeamDidntScore
+                                ? Model.mainGame.DidBothTeamScore()
+                                : !Model.mainGame.DidBothTeamScore();
+            <div class="goals-bet" data-bet-winner="@(bothWinnerMed)">
+                <label class="negrito">Ambos marcam</label>
+                <label class="team-value">
+                    @(percentBothTeamScored > percentBothTeamDidntScore ? "Sim" : "Não")
+                </label>
+            </div>
+        }
+        @{
+            var aboveGoals = Math.Round(Model.GetAverageGoals()) + 1.5;
+        }
+        <div class="goals-bet" data-bet-winner=@(Model.mainGame.GetSumScore() < aboveGoals)>
+            <label class="negrito">Jogo abaixo de</label>
+            <label class="team-value">@(aboveGoals) gols</label>
+        </div>
+    </div>
+    <div class="goals-bets">
+        <div class="negrito">Arriscado</div>
+        <br>
+        @if (resultFinded)
+        {
+            var winner = Model.mainGame.GetWinner() == null
+                            ? winners[0]
+                            : homeWinning && Model.mainGame.GetWinner().id == Model.mainGame.homeCompetitor.id
+                                || awayWinning && Model.mainGame.GetWinner().id == Model.mainGame.awayCompetitor.id;
+            <div class="goals-bet" data-bet-winner="@(winner)">
+                <label class="negrito">Possível vencedor</label>
+                <label class="team-value">
+                    @if (homeWinning)
+                    {
+                        <text>@(Model.mainGame.homeCompetitor.name)</text>
+                    }
+                    else if (awayWinning)
+                    {
+                        <text>@(Model.mainGame.awayCompetitor.name)</text>
+                    }
+                    @if (winners[0])
+                    {
+                        if (homeWinning || awayWinning)
+                        {
+                            <text>ou Empate</text>
+                        }
+                        else
+                        {
+                            <text>Empate</text>
+                        }
+                    }
+                </label>
+            </div>
+        }
+        @{ 
+            overGoals = Math.Round(Model.GetAverageGoals()) - .5;
+        }
+        <div class="goals-bet">
+            <label class="negrito">Jogo acima de</label>
+            <label class="team-value">@(overGoals) gols</label>
+        </div>
+        <div class="goals-bet">
+            <label class="negrito">Ambos marcam</label>
+            <label class="team-value">
+                @(percentBothTeamScored > percentBothTeamDidntScore ? "Não" : "Sim")
+            </label>
+        </div>
+        <div class="goals-bet">
+            <label class="negrito">Jogo abaixo de</label>
+            <label class="team-value">@(Math.Round(Model.GetAverageGoals()) + .5) gols</label>
+        </div>
+        @if (cornersAverage > 0)
+        {
+            <div class="goals-bet">
+                <label class="negrito">Média de escanteios</label>
+                <label class="team-value">@(cornersAverage)</label>
+            </div>
+        }
+        <div class="goals-bet">
+            <label class="negrito">Gols no 1º tempo</label>
+            <label class="team-value">@(averageGoalsFirst) gol(s)</label>
+        </div>
+        <div class="goals-bet">
+            <label class="negrito">Gols no 2º tempo</label>
+            <label class="team-value">@(averageGoalsSecond) gol(s)</label>
+        </div>
+    </div>
+</div>

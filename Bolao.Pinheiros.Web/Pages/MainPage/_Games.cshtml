@@ -1,0 +1,51 @@
+﻿@model Bolao.Pinheiros.BusinessLogic.Models.Root
+@{
+    var games = Model.games.OrderBy(x => x.competitionId).ThenBy(x => x.startTime).ThenByDescending(x => x.id).ToList();
+    var gamesByCompetition = games.GroupBy(x => x.competitionId);
+    const string BASE_URL_LOGO = "https://imagecache.365scores.com/image/upload/f_auto,w_72,h_72,c_limit,q_auto:eco,d_Countries:Round:21.png/Competitions/Light/";
+    var competitions = games.Select(x => new { x.competitionId, x.competitionDisplayName }).GroupBy(x => x.competitionId).Select(x => x.First()).ToList();
+}
+@if (Model != null)
+{
+    <div class="dados-jogos">
+        @(Html.Hidden("GetUpdates", Model.Date.Date == DateTime.Now.Date))
+        <div class="action-buttons-container">
+            <div class="component _13ml5gv component-live">
+                <div class="component _l6mpiv">
+                    <div class="component _ymmvtl live-button">Live</div>
+                </div>
+                <div class="switch-badge-desktop-component _pk2pzx games-count">(@(Model.games.Count))</div>
+            </div>
+        </div>
+        @foreach (var competition in gamesByCompetition)
+        {
+            <div id="@(competition.Key)" class="competition">
+                <div class="competition-title">
+                    <img alt="" title="" data-src="@(string.Concat(BASE_URL_LOGO, competition.Key))" style="max-width: 24px;" src="@(string.Concat(BASE_URL_LOGO, competition.Key))" />
+                    @{
+                        var countryId = Model.competitions.First(x => x.id == competition.Key).countryId;
+                        var countryName = Model.countries.First(x => x.id == countryId);
+                    }
+                    <label>@(competition.First().competitionDisplayName) (@(competition.Count())) - @(countryName.name)</label>
+                    <div class="component _13ml5gv component-alert">
+                        <div class="component _l6mpiv">
+                            <div class="component _ymmvtl alert-button">Alerta</div>
+                        </div>
+                    </div>
+                    <button class="ui-button ui-widget ui-corner-all analisis-button">Analisar todos</button>
+                </div>
+                @foreach (var game in competition)
+                {
+                    <div id="@(game.id)" class="container-jogo scores365" data-game="@(JsonConvert.SerializeObject(game))">
+                        @{
+                            ViewData["HomeStanding"] = Model.GetTeamStanding(game.competitionId, game.homeCompetitor.id);
+                            ViewData["AwayStanding"] = Model.GetTeamStanding(game.competitionId, game.awayCompetitor.id);
+                        }
+                        @(Html.Partial("_Game", game))
+                        <div class="detalhar-estatisticas">Análise</div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+}

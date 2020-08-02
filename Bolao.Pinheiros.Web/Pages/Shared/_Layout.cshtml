@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.0/themes/smoothness/jquery-ui.css">
+    <script src="~/js/notify.js?@(DateTime.Now.TimeOfDay.Ticks)"></script>
+    <script src="~/js/latinize.js?@(DateTime.Now.TimeOfDay.Ticks)"></script>
+    <link rel="stylesheet" type="text/css" href="~/css/bolao.css?@(DateTime.Now.TimeOfDay.Ticks)">
+    <link rel="stylesheet" type="text/css" href="~/css/flipcard.css?@(DateTime.Now.TimeOfDay.Ticks)">
+    <link rel="stylesheet" type="text/css" href="~/css/loading.css?@(DateTime.Now.TimeOfDay.Ticks)">
+</head>
+<body>
+    <div class="lds-container" style="display: none;"><div class="lds-aligner"><div class="lds-dual-ring"></div></div></div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>@DateTime.Now.Year - Danillo Pinheiro Neto</p>
+        </footer>
+    </div>
+    @RenderSection("scripts", required: false)
+</body>
+</html>
